@@ -3,6 +3,7 @@ import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 import { ModalProvider } from "@/providers/modal-provider"
+import { ToastProvider } from "@/providers/toast-provider"
 const inter = Inter({ subsets: ["vietnamese"] })
 
 export const metadata: Metadata = {
@@ -24,6 +25,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <ToastProvider />
           <ModalProvider />
           {children}
         </ThemeProvider>
