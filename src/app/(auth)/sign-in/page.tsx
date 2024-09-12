@@ -9,7 +9,6 @@ import {
   CardFooter,
   Card,
 } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -31,17 +30,19 @@ const formSchema = z.object({
 })
 
 const SignInPage = () => {
-  const form = useForm({
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       identifier: "",
       password: "",
     },
   })
+
+  const onSubmit = () => {}
   return (
     <div className="w-full max-w-md">
       <Form {...form}>
-        <form>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card>
             <CardHeader className="space-y-1">
               <CardTitle className="text-3xl font-bold">Sign In</CardTitle>
@@ -93,6 +94,23 @@ const SignInPage = () => {
           </div>
         </form>
       </Form>
+      <p className="mt-4 px-8 text-center text-sm text-muted-foreground">
+        By clicking continue, you agree to our{" "}
+        <Link
+          href="/terms"
+          className="underline underline-offset-4 hover:text-primary"
+        >
+          Terms of Service
+        </Link>{" "}
+        and{" "}
+        <Link
+          href="/privacy"
+          className="underline underline-offset-4 hover:text-primary"
+        >
+          Privacy Policy
+        </Link>
+        .
+      </p>
     </div>
   )
 }
