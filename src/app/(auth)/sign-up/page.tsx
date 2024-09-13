@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import {
   CardTitle,
@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/form"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "next/navigation"
+import toast from "react-hot-toast"
 
 const formSchema = z
   .object({
@@ -37,6 +39,10 @@ const formSchema = z
   })
 
 const SignUpPage = () => {
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,10 +52,47 @@ const SignUpPage = () => {
       confirmPassword: "",
     },
   })
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      setLoading(true)
+      const response = await fetch("/api/auth/sign-up", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: values.username,
+          email: values.email,
+          password: values.password,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        // Store the token in localStorage or a more secure storage method
+        localStorage.setItem("token", data.token)
+        // Redirect to homepage
+        router.push("/")
+        router.refresh()
+        toast.success("Sign up successfully !")
+      } else {
+        toast.error("An error occurred during sign up.")
+        setError(data.message || "An error occurred during sign up")
+      }
+    } catch (error) {
+      setError("An error occurred during sign up")
+      console.error("Error when signing up", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="w-full max-w-md">
       <Form {...form}>
-        <form>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card>
             <CardHeader className="space-y-1">
               <CardTitle className="text-3xl font-bold">Sign Up</CardTitle>
@@ -61,11 +104,14 @@ const SignUpPage = () => {
               <FormField
                 control={form.control}
                 name="username"
-                render={(field) => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your username" {...field} />
+                      <Input
+                        placeholder="Enter your username"
+                        {...field} // This spreads only the necessary props
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -74,14 +120,14 @@ const SignUpPage = () => {
               <FormField
                 control={form.control}
                 name="email"
-                render={(field) => (
+                render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
                         placeholder="Enter your email"
-                        {...field}
+                        {...field} // Spreads the necessary props
                       />
                     </FormControl>
                     <FormMessage />
@@ -91,14 +137,14 @@ const SignUpPage = () => {
               <FormField
                 control={form.control}
                 name="password"
-                render={(field) => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
                         placeholder="Create a password"
-                        {...field}
+                        {...field} // Spreads the necessary props
                       />
                     </FormControl>
                     <FormMessage />
@@ -108,14 +154,14 @@ const SignUpPage = () => {
               <FormField
                 control={form.control}
                 name="confirmPassword"
-                render={(field) => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>Confirm Password</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
                         placeholder="Confirm your password"
-                        {...field}
+                        {...field} // Spreads the necessary props
                       />
                     </FormControl>
                     <FormMessage />
@@ -124,7 +170,7 @@ const SignUpPage = () => {
               />
             </CardContent>
             <CardFooter>
-              <Button className="w-full" type="submit">
+              <Button className="w-full" type="submit" disabled={loading}>
                 Sign Up
               </Button>
             </CardFooter>
@@ -133,7 +179,7 @@ const SignUpPage = () => {
       </Form>
       <div className="mt-4 text-center text-sm">
         Already have an account?
-        <Link className="underline ml-2" href="/  sign-in">
+        <Link className="underline ml-2" href="/sign-in">
           Sign In
         </Link>
       </div>
