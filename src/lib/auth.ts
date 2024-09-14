@@ -9,8 +9,15 @@ export const hashPassword = (password: string) => hash(password, 10)
 export const comparePassword = (password: string, hashedPassword: string) =>
   compare(password, hashedPassword)
 
-export const generateToken = (userId: string) =>
-  sign({ userId }, JWT_SECRET, { expiresIn: "1h" })
+// Helper function to generate an access token
+export function generateAccessToken(userId: string) {
+  return sign({ userId }, process.env.JWT_SECRET!, { expiresIn: "15m" })
+}
+
+// Helper function to generate a refresh token
+export function generateRefreshToken(userId: string) {
+  return sign({ userId }, process.env.JWT_REFRESH_SECRET!, { expiresIn: "7d" })
+}
 
 export const verifyToken = (token: string) => {
   try {

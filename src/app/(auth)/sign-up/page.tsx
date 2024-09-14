@@ -72,9 +72,9 @@ const SignUpPage = () => {
 
       if (response.ok) {
         // Store the token in localStorage or a more secure storage method
-        localStorage.setItem("token", data.token)
+        localStorage.setItem("token", data.accessToken)
         // Redirect to homepage
-        router.push("/")
+        router.push("/sign-in")
         router.refresh()
         toast.success("Sign up successfully !")
       } else {

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
-import { hashPassword, generateToken } from "@/lib/auth"
+import { hashPassword } from "@/lib/auth"
 
 export async function POST(req: Request) {
   const body = await req.json()
@@ -25,11 +25,8 @@ export async function POST(req: Request) {
       },
     })
 
-    // Generate a token
-    const token = generateToken(user.id)
-
     return NextResponse.json(
-      { message: "User signed up successfully", token },
+      { message: "User signed up successfully", user },
       { status: 201 }
     )
   } catch (error) {
