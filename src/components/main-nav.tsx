@@ -7,6 +7,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
@@ -42,7 +43,7 @@ export function NavMenu() {
       <NavigationMenuList>
         <NavigationMenuItem>
           <Link href={"/products"} legacyBehavior passHref>
-            <NavigationMenuLink>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               <div className="font-normal text-foreground/70">Products</div>
             </NavigationMenuLink>
           </Link>

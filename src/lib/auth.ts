@@ -19,9 +19,9 @@ export function generateRefreshToken(userId: string) {
   return sign({ userId }, process.env.JWT_REFRESH_SECRET!, { expiresIn: "7d" })
 }
 
-export const verifyToken = (token: string) => {
+export const verifyToken = (token: string, secret_key: string) => {
   try {
-    return verify(token, JWT_SECRET) as { userId: string }
+    return verify(token, secret_key) as { userId: string }
   } catch (error) {
     console.error("Error when verifying token", error)
     return null
@@ -41,7 +41,7 @@ export const authenticated =
     if (!token)
       return res.status(401).json({ message: "Authentication required" })
 
-    const decoded = verifyToken(token)
+    const decoded = verifyToken(token, process.env.JWT_SECRET!)
     if (!decoded) return res.status(401).json({ message: "Invalid token" })
 
     return handler(req, res, decoded.userId)

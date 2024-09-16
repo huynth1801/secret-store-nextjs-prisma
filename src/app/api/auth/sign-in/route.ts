@@ -31,7 +31,7 @@ export async function POST(req: Request) {
 
     // Set refresh token in HTTP-only cookie
     const cookie = serialize("refreshToken", refreshToken, {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       path: "/",

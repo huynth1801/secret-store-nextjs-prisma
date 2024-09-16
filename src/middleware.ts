@@ -8,11 +8,9 @@ const publicOnlyRoutes = ["/sign-in", "/sign-up"]
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-  console.log(request.nextUrl.pathname)
 
   // Kiểm tra token xác thực
   const token = request.cookies.get("refreshToken")?.value
-  console.log(token)
 
   // Nếu người dùng đã đăng nhập và cố gắng truy cập các route công khai
   if (token && publicOnlyRoutes.includes(pathname)) {
