@@ -16,9 +16,151 @@ datasource db {
 
 model User {
     id          String  @id    @default(cuid())
-    username    String  @unique
-    email       String  @unique
-    password    String  
+    username    String?  @unique
+    email       String?  @unique
+    password    String
+    phone       String?  @unique
+
+    name        String?
+    birthday    String?
+
+    OTP         String?
+    emailUnsubscribeToken   String?   @unique   @default(cuid())
+
+    isEmailVerified   Boolean   @default(false)
+    isPhoneVerified   Boolean   @default(false)
+    isEmailSubscribed Boolean @default(false)
+    isPhoneSubscribed Boolean @default(false)
+
+    orders     Order[]
+    address    Address[]
+
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt  
-} 
+}
+
+model Owner {
+  id        String  @id   @default(cuid())
+  email     String   @unique
+  phone     String?  @unique
+  name      String?
+  avatar    String?
+  OTP       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Banner {
+  id        String  @id   @default(cuid())
+  label     String
+  image     String
+  
+  categories  Category[]
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Category {
+  id      String    @id   @default(cuid())
+  title   String    @unique
+  description   String?
+  
+
+  products    Product[]
+  banners     Banner[]
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Product {
+  id    String    @id     @default(cuid())
+  title String
+  description   String?
+  images        String[]
+  keywords      String[]
+  meta          Json?
+
+  price         Float
+  discount      Float @default(0)
+  stock         Int   @default(0)
+
+  isAvailable Boolean @default(false)
+  isFeatured  Boolean @default(false)
+
+  categories    Category[]
+
+  orders         OrderItem[]
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+}
+
+model Address {
+  id        String    @id     @default(cuid())
+  country   String    @default("VN")
+  address   String
+  city      String
+  phone     String
+
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+  orders   Order[]
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Order {
+  id      String      @id   @default(cuid())
+  number  Int         @unique   @default(autoincrement())
+  status  OrderStatusEnum
+
+  total     Float   @default(100)
+  shipping  Float   @default(100)
+  discount  Float   @default(100)
+
+  isPaid      Boolean     @default(false)
+  isCompleted Boolean   @default(false)
+
+  orderItems OrderItem[]
+
+  address     Address?      @relation(fields: [addressId], references: [id])
+  addressId   String?  
+  user      User        @relation(fields: [userId], references: [id])
+  userId    String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId])
+  @@index([addressId])
+}
+
+model OrderItem {
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   String
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+  count     Int
+  price     Float
+  discount  Float
+
+  @@unique([orderId, productId], name: "UniqueOrderItem")
+}
+
+
+enum OrderStatusEnum {
+  Processing
+  Shipped
+  Delivered
+  ReturnProcessing
+  ReturnCompleted
+  Cancelled
+  RefundProcessing
+  RefundCompleted
+  Denied
+}
