@@ -14,14 +14,14 @@ export const DataSection = async ({
   function Price() {
     if (product?.discount > 0) {
       const price = product?.price - product?.discount
-      const percentage = (product?.discount / product?.price) * 100
+      const percentage = product?.discount
       return (
         <div className="flex gap-2 items-center">
           <Badge className="flex gap-4" variant="destructive">
-            <div className="line-through">${product?.price}</div>
-            <div>%{percentage.toFixed(2)}</div>
+            <div className="line-through">{product?.price} VNĐ</div>
+            <div>{percentage}%</div>
           </Badge>
-          <h2 className="">${price.toFixed(2)}</h2>
+          <h2 className="">{price} VNĐ</h2>
         </div>
       )
     }

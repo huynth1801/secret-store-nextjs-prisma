@@ -34,6 +34,7 @@ model User {
 
     orders     Order[]
     address    Address[]
+    cart       Cart?
 
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt  
@@ -91,7 +92,8 @@ model Product {
   isFeatured  Boolean @default(false)
 
   categories    Category[]
-
+  
+  cartItems     CartItem[]
   orders         OrderItem[]
 
   createdAt     DateTime    @default(now())
@@ -163,4 +165,23 @@ enum OrderStatusEnum {
   RefundProcessing
   RefundCompleted
   Denied
+}
+
+model Cart {
+  user    User      @relation(fields: [userId], references: [id])
+  userId  String    @id
+  items   CartItem[]
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model CartItem {
+  cart        Cart      @relation(fields: [cartId], references: [userId])
+  cartId      String
+  product     Product   @relation(fields: [productId], references: [id])
+  productId   String
+  count       Int
+
+  @@unique([cartId, productId], name: "UniqueCartItem")
 }

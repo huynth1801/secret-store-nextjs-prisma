@@ -21,7 +21,7 @@ export function getOrderBy(
         price: "desc", // Sorting by price in descending order
       }
       break
-    case "least_expensive":
+    case "most_cheaper":
       orderBy = {
         price: "asc", // Sorting by price in ascending order
       }
