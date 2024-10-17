@@ -18,6 +18,7 @@ export default async function ProductPage({
     },
     include: {
       categories: true,
+      colors: true,
     },
   })
 

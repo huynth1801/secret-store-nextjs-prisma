@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 import { ModalProvider } from "@/providers/modal-provider"
 import { ToastProvider } from "@/providers/toast-provider"
+import { ReactQueryClientProvider } from "@/providers/ReactQueryClientProvider"
 const inter = Inter({ subsets: ["vietnamese"] })
 
 export const metadata: Metadata = {
@@ -17,19 +18,21 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} dark:bg-black dark:text-white`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <ToastProvider />
-          <ModalProvider />
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
+    <ReactQueryClientProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${inter.className} dark:bg-black dark:text-white`}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <ToastProvider />
+            <ModalProvider />
+            {children}
+          </ThemeProvider>
+        </body>
+      </html>
+    </ReactQueryClientProvider>
   )
 }

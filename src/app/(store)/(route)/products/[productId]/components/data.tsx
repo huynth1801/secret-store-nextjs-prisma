@@ -2,9 +2,7 @@ import { Separator } from "@/components/native/separator"
 import { Badge } from "@/components/ui/badge"
 import type { ProductWithIncludes } from "@/types/prisma"
 import Link from "next/link"
-
-// import CartButton from './cart_button'
-// import WishlistButton from './wishlist_button'
+import CartButton from "./cart-button"
 
 export const DataSection = async ({
   product,
@@ -48,14 +46,26 @@ export const DataSection = async ({
         ))}
       </div>
       <Separator />
+      <div className="flex items-center gap-2">
+        <p className="text-sm">Colors:</p>
+        {product.colors.map(({ name, value }, index) => (
+          <div key={index} className="flex items-center">
+            <div
+              className="h-6 w-6 rounded-full border cursor-pointer"
+              style={{ backgroundColor: value }}
+            />
+          </div>
+        ))}
+      </div>
+      <Separator />
       <small>{product.description}</small>
 
       <Separator />
       <div className="block space-y-2">
         <Price />
         <div className="flex gap-2">
-          {/* <CartButton product={product} />
-          <WishlistButton product={product} /> */}
+          <CartButton product={product} />
+          {/* <WishlistButton product={product} /> */}
         </div>
       </div>
     </div>

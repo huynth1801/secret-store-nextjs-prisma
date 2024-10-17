@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import axios from "axios"
 import {
   CreditCardIcon,
   ListOrderedIcon,
@@ -21,6 +22,23 @@ import { ShoppingBasketIcon } from "lucide-react"
 import Link from "next/link"
 
 export function UserNav() {
+  async function onLogout() {
+    try {
+      const response = await fetch("/api/auth/logout", {
+        cache: "no-store",
+      })
+
+      if (typeof window !== "undefined" && window.localStorage) {
+        document.cookie =
+          "logged-in=; expires=Thu, 01 Jan 1979 00:00:00 UTC; path=/;"
+      }
+
+      if (response.status === 200) window.location.reload()
+    } catch (error) {
+      console.error({ error })
+    }
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -68,7 +86,7 @@ export function UserNav() {
           </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="flex gap-2" onClick={() => {}}>
+        <DropdownMenuItem className="flex gap-2" onClick={onLogout}>
           <LogOutIcon className="h-4" />
           Log out
         </DropdownMenuItem>

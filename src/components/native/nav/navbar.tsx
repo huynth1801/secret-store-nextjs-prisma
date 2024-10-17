@@ -1,6 +1,7 @@
 "use client"
 
 import { useAuth } from "@/app/hooks/use-auth"
+import { useQuery } from "@tanstack/react-query"
 import { MainNav } from "@/components/main-nav"
 import { ModeToggle } from "@/components/mode-toggle"
 import { Button } from "@/components/ui/button"
@@ -10,9 +11,14 @@ import { UserNav } from "./user"
 import { useEffect, useState } from "react"
 import { MobileNav } from "./mobile"
 import { CommandMenu } from "@/components/composites/command"
+import getCartItem from "@/actions/get-cart"
+import { Spinner } from "../icons"
+import { Badge } from "@/components/ui/badge"
+import useCartStore from "@/store/useCartStore"
 
 export default function Header() {
   const { isAuthenticated, loading } = useAuth()
+  console.log(isAuthenticated)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -49,10 +55,29 @@ export default function Header() {
 }
 
 export function CartNav() {
+  const { cart, loading, refreshCart } = useCartStore()
+  const { isAuthenticated } = useAuth()
+
+  useEffect(() => {
+    refreshCart(isAuthenticated)
+  }, [isAuthenticated, refreshCart])
+
+  if (loading) {
+    return <Spinner />
+  }
+
+  // Calculate total number of items in the cart
+  const totalItems = cart.items.reduce((sum, item) => sum + item.count, 0)
+
   return (
-    <Link href={"/cart"}>
-      <Button size={"icon"} variant={"outline"} className="h-9">
+    <Link href="/cart">
+      <Button size="icon" variant="outline" className="h-9 relative">
         <ShoppingBagIcon className="h-4" />
+        {totalItems > 0 && (
+          <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+            {totalItems}
+          </span>
+        )}
       </Button>
     </Link>
   )

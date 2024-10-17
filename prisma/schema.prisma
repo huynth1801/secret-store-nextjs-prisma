@@ -76,29 +76,39 @@ model Category {
   updatedAt   DateTime  @updatedAt
 }
 
-model Product {
-  id    String    @id     @default(cuid())
-  title String
-  description   String?
-  images        String[]
-  keywords      String[]
-  meta          Json?
+model Color {
+  id        String    @id @default(uuid())
+  name      String
+  value     String   
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[] @relation("ProductColors")
+}
 
-  price         Float
-  discount      Float @default(0)
-  stock         Int   @default(0)
+
+model Product {
+  id          String    @id     @default(cuid())
+  title       String
+  description String?
+  images      String[]
+  keywords    String[]
+  meta        Json?
+
+  price       Float
+  discount    Float @default(0)
+  stock       Int   @default(0)
 
   isAvailable Boolean @default(false)
   isFeatured  Boolean @default(false)
 
-  categories    Category[]
-  
-  cartItems     CartItem[]
-  orders         OrderItem[]
+  categories  Category[]
+  colors      Color[]   @relation("ProductColors")  // Many-to-many relationship with Color
 
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  cartItems   CartItem[]
+  orders      OrderItem[]
 
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Address {

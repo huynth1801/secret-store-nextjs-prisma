@@ -9,6 +9,7 @@ export default async function Index() {
   const products = await prisma.product.findMany({
     include: {
       categories: true,
+      colors: true,
     },
   })
 
