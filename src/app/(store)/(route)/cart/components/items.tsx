@@ -46,12 +46,12 @@ export const Item = ({ cartItem, authenticated }: CartItemProps) => {
   }
 
   function CartButton() {
-    if (fetchingCart)
-      return (
-        <Button disabled>
-          <Spinner />
-        </Button>
-      )
+    // if (fetchingCart)
+    //   return (
+    //     <Button disabled>
+    //       <Spinner />
+    //     </Button>
+    //   )
 
     if (count === 0) {
       return <Button onClick={onAddToCart}>🛒 Add to Cart</Button>
@@ -74,15 +74,15 @@ export const Item = ({ cartItem, authenticated }: CartItemProps) => {
 
   function Price() {
     if (product?.discount > 0) {
-      const price = product?.price - product?.discount
-      const percentage = (product?.discount / product?.price) * 100
+      const price = product?.price - (product?.price * product?.discount) / 100
+      const percentage = product?.discount
       return (
         <div className="flex gap-2 items-center">
           <Badge className="flex gap-4" variant="destructive">
-            <div className="line-through">${product?.price.toFixed(2)}</div>
-            <div>{percentage.toFixed(2)}%</div>
+            <div className="line-through">${product?.price.toFixed(0)}</div>
+            <div>{percentage.toFixed(0)}%</div>
           </Badge>
-          <h2>${price.toFixed(2)}</h2>
+          <h2>{price.toFixed(0)} VNĐ</h2>
         </div>
       )
     }

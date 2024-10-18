@@ -8,6 +8,8 @@ import { useEffect } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Item } from "./items"
 import { useAuth } from "@/app/hooks/use-auth"
+import { Receipt } from "./receipt"
+import { CheckoutForm } from "./checkout"
 
 export const CartGrid = () => {
   const { cart, loading, refreshCart } = useCartStore()
@@ -51,7 +53,11 @@ export const CartGrid = () => {
       </div>
 
       {/* Receipt Section */}
-      <div className="md:col-span-4 lg:col-span-3">{/* <Receipt /> */}</div>
+      <div className="md:col-span-4 lg:col-span-3">
+        <Receipt />
+        {/* Checkout form */}
+        <CheckoutForm />
+      </div>
     </div>
   )
 }

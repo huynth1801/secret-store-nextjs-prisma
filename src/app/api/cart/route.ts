@@ -9,7 +9,6 @@ export async function GET(req: Request) {
     const cookieHeader = req.headers.get("cookie") || ""
     const cookies = parse(cookieHeader)
     const refreshToken = cookies["refreshToken"]
-    console.log("refreshToken", refreshToken)
 
     if (!refreshToken) {
       return new NextResponse("Unauthorized", { status: 401 })

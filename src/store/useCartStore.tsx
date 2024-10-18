@@ -22,6 +22,12 @@ type CartState = {
     items: CartItem[]
   }
   loading: boolean
+  getReceiptDetails: () => {
+    totalAmount: number
+    discountAmount: number
+    taxAmount: number
+    payableAmount: number
+  }
   refreshCart: (authenticated: boolean) => Promise<void>
   addToCart: (product: Product, authenticated: boolean) => Promise<void>
   removeFromCart: (product: Product, authenticated: boolean) => Promise<void>
@@ -140,6 +146,30 @@ const useCartStore = create<CartState>()(
       clearCart: () => {
         set({ cart: { items: [] } })
         localStorage.removeItem("cart")
+      },
+
+      getReceiptDetails: () => {
+        const { cart } = get()
+        let totalAmount = 0
+        let discountAmount = 0
+
+        if (cart.items.length > 0) {
+          for (const item of cart.items) {
+            totalAmount += item.count * (item.product?.price ?? 0)
+            discountAmount += item.count * (item.product?.discount ?? 0)
+          }
+        }
+
+        const afterDiscountAmount = totalAmount - discountAmount
+        const taxAmount = afterDiscountAmount * 0.09
+        const payableAmount = afterDiscountAmount + taxAmount
+        return {
+          totalAmount,
+          discountAmount,
+          afterDiscountAmount,
+          taxAmount,
+          payableAmount,
+        }
       },
     }),
     {

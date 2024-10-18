@@ -134,6 +134,8 @@ model Order {
 
   total     Float   @default(100)
   shipping  Float   @default(100)
+  tax       Float   @default(100)
+  payable   Float @default(100)
   discount  Float   @default(100)
 
   isPaid      Boolean     @default(false)

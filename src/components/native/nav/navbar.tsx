@@ -18,7 +18,6 @@ import useCartStore from "@/store/useCartStore"
 
 export default function Header() {
   const { isAuthenticated, loading } = useAuth()
-  console.log(isAuthenticated)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -62,9 +61,9 @@ export function CartNav() {
     refreshCart(isAuthenticated)
   }, [isAuthenticated, refreshCart])
 
-  if (loading) {
-    return <Spinner />
-  }
+  // if (loading) {
+  //   return <Spinner />
+  // }
 
   // Calculate total number of items in the cart
   const totalItems = cart.items.reduce((sum, item) => sum + item.count, 0)

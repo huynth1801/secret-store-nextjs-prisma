@@ -23,7 +23,7 @@ export const Product = ({ product }: { product: ProductWithIncludes }) => {
             <div className="line-through">{product?.price} VNĐ</div>
             <div>{percentage}%</div>
           </Badge>
-          <h2 className="">{price.toFixed(2)} VNĐ</h2>
+          <h2 className="">{price.toFixed(0)} VNĐ</h2>
         </div>
       )
     }
