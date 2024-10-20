@@ -15,22 +15,23 @@ export interface CartItemProps {
   cartItem: {
     product: Product
     productId: string
+    colorId: string
     count: number
   }
   authenticated: boolean
 }
 
 export const Item = ({ cartItem, authenticated }: CartItemProps) => {
-  const { product, productId } = cartItem
+  const { product, productId, colorId } = cartItem
   const { addToCart, removeFromCart, getCountInCart } = useCartStore()
   const [fetchingCart, setFetchingCart] = useState(false)
 
-  const count = getCountInCart(productId)
+  const count = getCountInCart(productId, colorId)
 
   async function onAddToCart() {
     setFetchingCart(true)
     try {
-      await addToCart(product, authenticated)
+      await addToCart(product, colorId, authenticated)
     } finally {
       setFetchingCart(false)
     }
@@ -39,26 +40,23 @@ export const Item = ({ cartItem, authenticated }: CartItemProps) => {
   async function onRemoveFromCart() {
     setFetchingCart(true)
     try {
-      await removeFromCart(product, authenticated)
+      await removeFromCart(product, colorId, authenticated)
     } finally {
       setFetchingCart(false)
     }
   }
 
   function CartButton() {
-    // if (fetchingCart)
-    //   return (
-    //     <Button disabled>
-    //       <Spinner />
-    //     </Button>
-    //   )
-
-    if (count === 0) {
-      return <Button onClick={onAddToCart}>🛒 Add to Cart</Button>
+    if (fetchingCart) {
+      return (
+        <Button disabled>
+          <Spinner />
+        </Button>
+      )
     }
 
     return (
-      <>
+      <div className="flex items-center gap-2">
         <Button variant="outline" size="icon" onClick={onRemoveFromCart}>
           {count === 1 ? <X className="h-4" /> : <MinusIcon className="h-4" />}
         </Button>
@@ -68,7 +66,7 @@ export const Item = ({ cartItem, authenticated }: CartItemProps) => {
         <Button variant="outline" size="icon" onClick={onAddToCart}>
           <PlusIcon className="h-4" />
         </Button>
-      </>
+      </div>
     )
   }
 

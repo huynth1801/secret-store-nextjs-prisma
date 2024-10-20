@@ -7,25 +7,28 @@ import { useAuth } from "@/app/hooks/use-auth"
 import useCartStore from "@/store/useCartStore"
 import { Product } from "@prisma/client"
 
-// type Product = {
-//   id: string
-//   title: string
-//   price: number
-// }
-
 type CartButtonProps = {
   product: Product
+  selectedColor: string
 }
 
-export default function CartButton({ product }: CartButtonProps) {
-  return <ButtonComponent product={product} />
+export default function CartButton({
+  product,
+  selectedColor,
+}: CartButtonProps) {
+  return <ButtonComponent product={product} selectedColor={selectedColor} />
 }
 
-const ButtonComponent = ({ product }) => {
+type ButtonComponentProps = {
+  product: Product
+  selectedColor: string
+}
+
+const ButtonComponent = ({ product, selectedColor }: ButtonComponentProps) => {
   const { isAuthenticated } = useAuth()
   const { loading, addToCart, getCountInCart, removeFromCart } = useCartStore()
 
-  const count = getCountInCart(product.id)
+  const count = getCountInCart(product.id, selectedColor)
 
   if (loading)
     return (
@@ -34,8 +37,10 @@ const ButtonComponent = ({ product }) => {
       </Button>
     )
 
-  const handleAddToCart = () => addToCart(product, isAuthenticated)
-  const handleRemoveFromCart = () => removeFromCart(product, isAuthenticated)
+  const handleAddToCart = () =>
+    addToCart(product, selectedColor, isAuthenticated)
+  const handleRemoveFromCart = () =>
+    removeFromCart(product, selectedColor, isAuthenticated)
 
   if (count === 0) {
     return (
@@ -46,28 +51,21 @@ const ButtonComponent = ({ product }) => {
     )
   }
 
-  if (count > 0) {
-    return (
-      <>
-        <Button
-          variant={"outline"}
-          size={"icon"}
-          onClick={handleRemoveFromCart}
-        >
-          {count === 1 ? (
-            <X className="h-4 w-4" />
-          ) : (
-            <MinusIcon className="h-4 w-4" />
-          )}
-        </Button>
-        <Button disabled variant="outline" size="icon">
-          {count}
-        </Button>
-        <Button variant="outline" size="icon" onClick={handleAddToCart}>
-          <PlusIcon className="h-4 w-4" />
-        </Button>
-      </>
-    )
-  }
-  return null
+  return (
+    <>
+      <Button variant={"outline"} size={"icon"} onClick={handleRemoveFromCart}>
+        {count === 1 ? (
+          <X className="h-4 w-4" />
+        ) : (
+          <MinusIcon className="h-4 w-4" />
+        )}
+      </Button>
+      <Button disabled variant="outline" size="icon">
+        {count}
+      </Button>
+      <Button variant="outline" size="icon" onClick={handleAddToCart}>
+        <PlusIcon className="h-4 w-4" />
+      </Button>
+    </>
+  )
 }

@@ -77,6 +77,7 @@ export async function POST(req: Request) {
         orderItems: {
           create: cart.items.map((orderItem) => ({
             count: orderItem.count,
+            colorId: orderItem.colorId,
             price: orderItem.product.price,
             discount: orderItem.product.discount || 0,
             product: {

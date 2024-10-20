@@ -11,9 +11,17 @@ type Product = {
   discount?: number
 }
 
+type Color = {
+  id: string
+  name: string
+  value: string
+}
+
 type CartItem = {
   productId: string
   product: Product
+  colorId: string // New field to store selected color
+  color: Color // New field for color details
   count: number
 }
 
@@ -29,11 +37,23 @@ type CartState = {
     payableAmount: number
   }
   refreshCart: (authenticated: boolean) => Promise<void>
-  addToCart: (product: Product, authenticated: boolean) => Promise<void>
-  removeFromCart: (product: Product, authenticated: boolean) => Promise<void>
-  getCountInCart: (productId: string) => number
+  addToCart: (
+    product: Product,
+    colorId: Color,
+    authenticated: boolean
+  ) => Promise<void>
+  removeFromCart: (
+    product: Product,
+    color: Color,
+    authenticated: boolean
+  ) => Promise<void>
+  getCountInCart: (productId: string, colorId: string) => number
   totalItems: () => number
-  updateLocalCart: (product: Product, delta: number) => CartState["cart"]
+  updateLocalCart: (
+    product: Product,
+    color: Color,
+    delta: number
+  ) => CartState["cart"]
   clearCart: () => void // New method to clear the cart
 }
 
@@ -65,21 +85,26 @@ const useCartStore = create<CartState>()(
         }
       },
 
-      addToCart: async (product: Product, authenticated: boolean) => {
+      addToCart: async (
+        product: Product,
+        color: Color,
+        authenticated: boolean
+      ) => {
         set({ loading: true })
 
         try {
-          const count = get().getCountInCart(product.id)
+          const count = get().getCountInCart(product.id, color.id)
           let updatedCart
 
           if (authenticated) {
             const response = await axios.post("/api/cart", {
               productId: product.id,
+              colorId: color.id,
               count: count + 1,
             })
             updatedCart = await response.data
           } else {
-            updatedCart = get().updateLocalCart(product, 1)
+            updatedCart = get().updateLocalCart(product, color, 1)
           }
 
           set({ cart: updatedCart })
@@ -90,21 +115,26 @@ const useCartStore = create<CartState>()(
         }
       },
 
-      removeFromCart: async (product: Product, authenticated: boolean) => {
+      removeFromCart: async (
+        product: Product,
+        color: Color,
+        authenticated: boolean
+      ) => {
         set({ loading: true })
 
         try {
-          const count = get().getCountInCart(product.id)
+          const count = get().getCountInCart(product.id, color.id)
           let updatedCart
 
           if (authenticated) {
             const response = await axios.post("/api/cart", {
               productId: product.id,
+              colorId: color.id,
               count: count - 1,
             })
             updatedCart = await response.data
           } else {
-            updatedCart = get().updateLocalCart(product, -1)
+            updatedCart = get().updateLocalCart(product, color, -1)
           }
 
           set({ cart: updatedCart })
@@ -115,9 +145,11 @@ const useCartStore = create<CartState>()(
         }
       },
 
-      getCountInCart: (productId: string) => {
+      getCountInCart: (productId: string, colorId: string) => {
         const items = get().cart.items || []
-        const item = items.find((item) => item.productId === productId)
+        const item = items.find(
+          (item) => item.productId === productId && item.colorId === colorId
+        )
         return item ? item.count : 0
       },
 
@@ -126,16 +158,24 @@ const useCartStore = create<CartState>()(
         return items.reduce((total, item) => total + item.count, 0)
       },
 
-      updateLocalCart: (product: Product, delta: number) => {
+      updateLocalCart: (product: Product, color: Color, delta: number) => {
         const { cart } = get()
         const items = [...cart.items]
-        const index = items.findIndex((item) => item.productId === product.id)
+        const index = items.findIndex(
+          (item) => item.productId === product.id && item.colorId === color.id
+        )
 
         if (index > -1) {
           items[index].count += delta
           if (items[index].count <= 0) items.splice(index, 1)
         } else if (delta > 0) {
-          items.push({ productId: product.id, product, count: delta })
+          items.push({
+            productId: product.id,
+            product,
+            colorId: color.id,
+            color,
+            count: delta,
+          })
         }
 
         const updatedCart = { ...cart, items }

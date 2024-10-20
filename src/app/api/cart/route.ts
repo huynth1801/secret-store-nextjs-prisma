@@ -70,11 +70,11 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 })
     }
 
-    const { productId, count } = await req.json()
+    const { productId, count, colorId } = await req.json()
 
     if (count < 1) {
       await prisma.cartItem.delete({
-        where: { UniqueCartItem: { cartId: userId, productId } },
+        where: { UniqueCartItem: { cartId: userId, productId, colorId } },
       })
     } else {
       await prisma.cart.upsert({
@@ -95,6 +95,7 @@ export async function POST(req: Request) {
                 UniqueCartItem: {
                   cartId: userId,
                   productId,
+                  colorId,
                 },
               },
               update: {
@@ -102,6 +103,7 @@ export async function POST(req: Request) {
               },
               create: {
                 productId,
+                colorId,
                 count,
               },
             },
