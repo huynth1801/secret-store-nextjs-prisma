@@ -145,3 +145,49 @@ const calculateCosts = ({ cart }: { cart }) => {
     payable: parseFloat(payable.toFixed(0)),
   }
 }
+
+export async function GET(req: Request) {
+  try {
+    const cookieHeader = req.headers.get("cookie") || ""
+    const cookies = parse(cookieHeader)
+    const refreshToken = cookies["refreshToken"]
+
+    if (!refreshToken) {
+      return new NextResponse("Unauthorized", { status: 401 })
+    }
+
+    // Decode the JWT token to extract userId
+    const decodedToken = jwt.verify(
+      refreshToken,
+      process.env.JWT_REFRESH_SECRET!
+    )
+    const userId = decodedToken?.userId
+
+    if (!userId) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
+    const orders = await prisma.order.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        address: true,
+        orderItems: {
+          include: {
+            product: {
+              include: {
+                categories: true,
+              },
+            },
+          },
+        },
+      },
+    })
+
+    return NextResponse.json(orders)
+  } catch (error) {
+    console.error("[ORDERS_GET]", error)
+    return new NextResponse("Internal error", { status: 500 })
+  }
+}

@@ -6,3 +6,18 @@ export type ProductWithIncludes = Prisma.ProductGetPayload<{
     colors: true
   }
 }>
+
+export type OrderWithIncludes = Prisma.OrderGetPayload<{
+  include: {
+    orderItems: {
+      include: {
+        product: {
+          include: {
+            categories: true
+          }
+        }
+      }
+    }
+    address: true
+  }
+}>

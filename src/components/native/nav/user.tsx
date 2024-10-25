@@ -60,7 +60,7 @@ export function UserNav() {
               Edit Profile
             </DropdownMenuItem>
           </Link>
-          <Link href={"/profile/orders"}>
+          <Link href={"/orders"}>
             <DropdownMenuItem className="flex gap-2">
               <ListOrderedIcon className="h-4" />
               Orders

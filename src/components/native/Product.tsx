@@ -20,10 +20,12 @@ export const Product = ({ product }: { product: ProductWithIncludes }) => {
       return (
         <div className="flex gap-2 items-center">
           <Badge className="flex gap-4" variant="destructive">
-            <div className="line-through">{product?.price} VNĐ</div>
+            <div className="line-through">
+              {product?.price.toLocaleString()} VNĐ
+            </div>
             <div>{percentage}%</div>
           </Badge>
-          <h2 className="">{price.toFixed(0)} VNĐ</h2>
+          <h2 className="">{price.toLocaleString()} VNĐ</h2>
         </div>
       )
     }

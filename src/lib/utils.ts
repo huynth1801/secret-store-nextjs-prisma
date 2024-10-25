@@ -10,6 +10,11 @@ export function isVariableValid(variable) {
   return variable !== null && variable !== undefined
 }
 
+export const formatter = new Intl.NumberFormat("vi-VN", {
+  style: "currency",
+  currency: "VND",
+})
+
 export function getOrderBy(
   sort: string | undefined
 ): Prisma.ProductOrderByWithRelationInput {
