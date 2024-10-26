@@ -106,7 +106,7 @@ const OrderPage = () => {
   }
 
   return (
-    <div className="container mx-auto p-8 max-w-6xl">
+    <div className="container mx-auto p-8 max-w-6xl dark:text-white">
       <div className="mb-8 flex items-center justify-between">
         <h1 className="text-3xl font-bold text-gray-900">Your Orders</h1>
         <Button
@@ -156,7 +156,7 @@ const OrderPage = () => {
                 </p>
               </div>
 
-              <div>
+              <div className="dark:text-white">
                 <h3 className="text-lg font-semibold mb-4">Order Items</h3>
                 <ul className="divide-y divide-gray-200">
                   {order.orderItems.map((item) => (
@@ -176,7 +176,7 @@ const OrderPage = () => {
                       <div className="ml-6 flex flex-1 flex-col">
                         <div className="flex justify-between">
                           <div className="flex-1">
-                            <h4 className="font-medium text-gray-900">
+                            <h4 className="font-medium text-gray-900 dark:text-white dark:hover:text-black">
                               {item.product?.title}
                             </h4>
                             <p className="mt-1 text-sm text-gray-500">
@@ -185,7 +185,7 @@ const OrderPage = () => {
                                 .join(", ")}
                             </p>
                           </div>
-                          <p className="text-right font-medium text-gray-900">
+                          <p className="text-right font-medium text-gray-900 dark:text-white dark:hover:text-black">
                             {formatter.format(item.product?.price)}
                           </p>
                         </div>
@@ -193,7 +193,7 @@ const OrderPage = () => {
                           <p className="text-sm text-gray-500">
                             Qty: {item.count}
                           </p>
-                          <p className="font-medium text-gray-900">
+                          <p className="font-medium text-gray-900 dark:text-white dark:hover:text-black">
                             Subtotal:{" "}
                             {formatter.format(
                               (item.product?.price || 0) * item.count
@@ -207,11 +207,12 @@ const OrderPage = () => {
               </div>
             </CardContent>
 
-            <CardFooter className="border-t bg-gray-50 p-6">
-              <div className="flex justify-end w-full">
+            <CardFooter className="border-t bg-gray-50 p-6 dark:bg-gray-900">
+              <div className="flex justify-between w-full">
+                <Button variant={"outline"}>Cancel</Button>
                 <div className="text-right">
                   <p className="text-sm text-gray-500">Order Total</p>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
                     {formatter.format(order.total)}
                   </p>
                 </div>
