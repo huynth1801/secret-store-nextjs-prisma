@@ -12,6 +12,17 @@ import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Clock, Package, MapPin, ArrowLeft, AlertCircle } from "lucide-react"
 
+type OrderItem = {
+  orderId: string
+  product: {
+    images: string[]
+    title: string
+    price: number
+    categories: { title: string }[]
+  }
+  count: number
+}
+
 const fetchAllOrders = async () => {
   const response = await fetch("/api/orders", {
     method: "GET",
@@ -161,7 +172,7 @@ const OrderPage = () => {
               <div className="dark:text-white">
                 <h3 className="text-lg font-semibold mb-4">Order Items</h3>
                 <ul className="divide-y divide-gray-200">
-                  {order.orderItems.map((item) => (
+                  {order.orderItems.map((item: OrderItem) => (
                     <li
                       key={item.orderId}
                       className="flex items-center py-4 hover:bg-gray-50 transition-colors duration-150 rounded-lg p-2"
