@@ -8,30 +8,42 @@ import { MinusIcon, PlusIcon, X } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
-import { Product } from "@prisma/client"
 import useCartStore from "@/store/useCartStore"
+import { CartItem } from "@/store/useCartStore"
+
+// export type ExtendedProduct = Product & {
+//   createdAt: Date
+//   updatedAt: Date
+//   keywords: string[]
+//   meta: JsonValue
+//   stock: number
+//   isAvailable: boolean
+//   isFeatured: boolean
+// }
+
+// export interface CartItem {
+//   product: ExtendedProduct
+//   productId: string
+//   color: Color
+//   count: number
+// }
 
 export interface CartItemProps {
-  cartItem: {
-    product: Product
-    productId: string
-    colorId: string
-    count: number
-  }
+  cartItem: CartItem
   authenticated: boolean
 }
 
 export const Item = ({ cartItem, authenticated }: CartItemProps) => {
-  const { product, productId, colorId } = cartItem
+  const { product, productId, color } = cartItem
   const { addToCart, removeFromCart, getCountInCart } = useCartStore()
   const [fetchingCart, setFetchingCart] = useState(false)
 
-  const count = getCountInCart(productId, colorId)
+  const count = getCountInCart(productId, color?.id)
 
   async function onAddToCart() {
     setFetchingCart(true)
     try {
-      await addToCart(product, colorId, authenticated)
+      await addToCart(product, color, authenticated)
     } finally {
       setFetchingCart(false)
     }
@@ -40,7 +52,7 @@ export const Item = ({ cartItem, authenticated }: CartItemProps) => {
   async function onRemoveFromCart() {
     setFetchingCart(true)
     try {
-      await removeFromCart(product, colorId, authenticated)
+      await removeFromCart(product, color, authenticated)
     } finally {
       setFetchingCart(false)
     }

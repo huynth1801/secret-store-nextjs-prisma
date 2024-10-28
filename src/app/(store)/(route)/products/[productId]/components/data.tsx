@@ -9,8 +9,16 @@ import type { ProductWithIncludes } from "@/types/prisma"
 import Link from "next/link"
 import useCartStore from "@/store/useCartStore"
 import { useAuth } from "@/app/hooks/use-auth"
+import { Color, Category } from "@prisma/client"
 
-export const DataSection = ({ product }: { product: ProductWithIncludes }) => {
+export interface DataSectionProps {
+  product: ProductWithIncludes & {
+    categories: Category[]
+    colors: Color[]
+  }
+}
+
+export const DataSection = ({ product }: DataSectionProps) => {
   const [selectedColor, setSelectedColor] = useState<{
     id: string
     name: string
@@ -24,15 +32,13 @@ export const DataSection = ({ product }: { product: ProductWithIncludes }) => {
 
   function Price() {
     if (product?.discount > 0) {
-      const price = product?.price - product?.discount
-      const discountPercentage = Math.round(
-        (product?.discount / product?.price) * 100
-      )
+      const price = product.price - (product.discount * product.price) / 100
+      const discountPercentage = product.discount
       return (
         <div className="flex gap-2 items-center">
           <Badge className="flex gap-4" variant="destructive">
             <div className="line-through">
-              {product?.price.toLocaleString()} VNĐ
+              {product.price.toLocaleString()} VNĐ
             </div>
             <div>{discountPercentage}%</div>
           </Badge>
@@ -41,11 +47,10 @@ export const DataSection = ({ product }: { product: ProductWithIncludes }) => {
       )
     }
 
-    return <h2>{product?.price.toLocaleString()} VNĐ</h2>
+    return <h2>{product.price.toLocaleString()} VNĐ</h2>
   }
 
   const handleSelectColor = (color: typeof selectedColor) => {
-    console.log(color)
     setSelectedColor(color)
   }
 

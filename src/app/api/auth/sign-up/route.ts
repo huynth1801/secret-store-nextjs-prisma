@@ -4,7 +4,8 @@ import { hashPassword } from "@/lib/auth"
 
 export async function POST(req: Request) {
   const body = await req.json()
-  const { username, email, password, confirmPassword } = body
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { username, email, password } = body
 
   try {
     const existingUser = await prisma.user.findFirst({

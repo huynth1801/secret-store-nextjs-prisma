@@ -19,7 +19,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
@@ -31,7 +30,6 @@ import {
 import axios from "axios"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import prisma from "@/lib/prisma"
 
 // Validation schema using Zod
 const checkoutSchema = z.object({

@@ -1,12 +1,8 @@
 "use client"
 
-import { useAuth } from "@/app/hooks/use-auth"
 import { Separator } from "@/components/native/separator"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import useCartStore from "@/store/useCartStore"
-import Link from "next/link"
-import { useMemo } from "react"
 import { useReceiptCalculations } from "./use-receipt-calculation"
 
 type Product = {
@@ -18,6 +14,7 @@ type Product = {
   description: string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type CartItem = {
   productId: string
   product: Product
@@ -34,7 +31,6 @@ export type ReceiptCalculation = {
 
 export function Receipt() {
   const { cart, loading } = useCartStore()
-  const { isAuthenticated } = useAuth()
 
   const calculations = useReceiptCalculations()
 
@@ -46,31 +42,38 @@ export function Receipt() {
         <h2 className="font-bold tracking-tight">Receipt</h2>
       </CardHeader>
 
-      <CardContent className="p-4 text-sm">
-        <div className="block space-y-[1vh]">
-          <div className="flex justify-between">
-            <p>Total Amount</p>
-            <h3>{calculations.totalAmount} VNĐ</h3>
+      {!isCartEmpty ? (
+        <CardContent className="p-4 text-sm">
+          <div className="block space-y-[1vh]">
+            <div className="flex justify-between">
+              <p>Total Amount</p>
+              <h3>{calculations.totalAmount} VNĐ</h3>
+            </div>
+
+            <div className="flex justify-between">
+              <p>Discount Amount</p>
+              <h3>{calculations.discountAmount} VNĐ</h3>
+            </div>
+
+            <div className="flex justify-between">
+              <p>Tax Amount</p>
+              <h3>{calculations.taxAmount} VNĐ</h3>
+            </div>
           </div>
 
-          <div className="flex justify-between">
-            <p>Discount Amount</p>
-            <h3>{calculations.discountAmount} VNĐ</h3>
-          </div>
+          <Separator className="my-4" />
 
           <div className="flex justify-between">
-            <p>Tax Amount</p>
-            <h3>{calculations.taxAmount} VNĐ</h3>
+            <p>Payable Amount</p>
+            <h3>{calculations.payableAmount} VNĐ</h3>
           </div>
-        </div>
+        </CardContent>
+      ) : (
+        <CardContent>
+          <div>You dont have receipt yet.</div>
+        </CardContent>
+      )}
 
-        <Separator className="my-4" />
-
-        <div className="flex justify-between">
-          <p>Payable Amount</p>
-          <h3>{calculations.payableAmount} VNĐ</h3>
-        </div>
-      </CardContent>
       {/* 
       <Separator /> */}
 

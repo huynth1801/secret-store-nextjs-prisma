@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma"
 import { NextResponse } from "next/server"
-import jwt from "jsonwebtoken"
+import jwt, { JwtPayload } from "jsonwebtoken"
 import { parse } from "cookie"
 
 // POST Order API
@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     const decodedToken = jwt.verify(
       refreshToken,
       process.env.JWT_REFRESH_SECRET!
-    )
+    ) as JwtPayload
     const userId = decodedToken?.userId
 
     if (!userId) {
@@ -120,8 +120,20 @@ export async function POST(req: Request) {
   }
 }
 
+type CartItem = {
+  product: {
+    price: number
+    discount?: number // Discount might be optional based on your usage
+  }
+  count: number
+}
+
+type Cart = {
+  items: CartItem[]
+}
+
 // Helper function to calculate costs from the cart
-const calculateCosts = ({ cart }: { cart }) => {
+const calculateCosts = ({ cart }: { cart: Cart }) => {
   let total = 0
   let discount = 0
 
@@ -160,7 +172,7 @@ export async function GET(req: Request) {
     const decodedToken = jwt.verify(
       refreshToken,
       process.env.JWT_REFRESH_SECRET!
-    )
+    ) as JwtPayload
     const userId = decodedToken?.userId
 
     if (!userId) {

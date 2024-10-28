@@ -22,6 +22,10 @@ export default async function ProductPage({
     },
   })
 
+  if (!product) {
+    return <div>Product not found</div>
+  }
+
   if (isVariableValid(product)) {
     return (
       <>
@@ -33,6 +37,7 @@ export default async function ProductPage({
       </>
     )
   }
+  return <p>Product not found</p>
 }
 
 interface BreadcrumbsProps {
@@ -70,10 +75,16 @@ const Breadcrumbs = ({ product }: BreadcrumbsProps) => {
   )
 }
 
-const ImageList = ({ product }) => {
+interface ImageListProps {
+  product: {
+    images: string[]
+  } | null
+}
+
+const ImageList = ({ product }: ImageListProps) => {
   return (
     <div className="relative min-h-[50vh] w-full col-span-1">
-      <Carousel images={product?.images} />
+      <Carousel images={product?.images || []} /> {/* Provides a fallback */}
     </div>
   )
 }

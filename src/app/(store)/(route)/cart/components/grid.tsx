@@ -1,27 +1,24 @@
-"use client"
-
 import { Card, CardContent } from "@/components/ui/card"
 import { isVariableValid } from "@/lib/utils"
-import { Skeleton } from "./skeleton"
 import useCartStore from "@/store/useCartStore"
 import { useEffect } from "react"
 import { Badge } from "@/components/ui/badge"
-import { Item } from "./items"
 import { useAuth } from "@/app/hooks/use-auth"
 import { Receipt } from "./receipt"
 import { CheckoutForm } from "./checkout"
+import { Item } from "./items"
+import { CartItem } from "@/store/useCartStore"
 
 export const CartGrid = () => {
   const { cart, loading, refreshCart } = useCartStore()
   const { isAuthenticated } = useAuth()
 
   useEffect(() => {
-    refreshCart(isAuthenticated) // Call refreshCart only once when the component mounts
-  }, [])
+    refreshCart(isAuthenticated)
+  }, [isAuthenticated, refreshCart])
 
-  const items = cart.items
+  const items: CartItem[] = cart.items
 
-  // Render empty cart message if no items exist
   if (isVariableValid(items) && items.length === 0 && !loading) {
     return (
       <div className="mb-4 grid grid-cols-1 md:grid-cols-12 gap-4">
@@ -38,24 +35,20 @@ export const CartGrid = () => {
     )
   }
 
-  // Render the cart items and receipt section
   return (
     <div className="mb-4 grid grid-cols-1 md:grid-cols-12 gap-4">
-      {/* Cart Items */}
       <div className="md:col-span-8 lg:col-span-9">
-        {items.map((cartItem, index: number) => (
+        {items.map((cartItem) => (
           <Item
             cartItem={cartItem}
             authenticated={isAuthenticated}
-            key={index}
+            key={`${cartItem.productId}}`}
           />
         ))}
       </div>
 
-      {/* Receipt Section */}
       <div className="md:col-span-4 lg:col-span-3">
         <Receipt />
-        {/* Checkout form */}
         <CheckoutForm />
       </div>
     </div>

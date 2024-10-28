@@ -3,6 +3,6 @@ export interface NavItem {
   href?: string
   disabled?: boolean
   external?: boolean
-  icon?: any
+  icon?: unknown
   label?: string
 }

@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma"
 import { parse } from "cookie"
-import jwt from "jsonwebtoken"
+import jwt, { JwtPayload } from "jsonwebtoken"
 import { NextResponse } from "next/server"
 
 export async function GET(
@@ -20,7 +20,7 @@ export async function GET(
     const decodedToken = jwt.verify(
       refreshToken,
       process.env.JWT_REFRESH_SECRET!
-    )
+    ) as JwtPayload
     const userId = decodedToken?.userId
 
     if (!userId) {

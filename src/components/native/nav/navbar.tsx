@@ -1,7 +1,6 @@
 "use client"
 
 import { useAuth } from "@/app/hooks/use-auth"
-import { useQuery } from "@tanstack/react-query"
 import { MainNav } from "@/components/main-nav"
 import { ModeToggle } from "@/components/mode-toggle"
 import { Button } from "@/components/ui/button"
@@ -11,12 +10,10 @@ import { UserNav } from "./user"
 import { useEffect, useState } from "react"
 import { MobileNav } from "./mobile"
 import { CommandMenu } from "@/components/composites/command"
-import getCartItem from "@/actions/get-cart"
-import { Spinner } from "../icons"
-import { Badge } from "@/components/ui/badge"
 import useCartStore from "@/store/useCartStore"
 
 export default function Header() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { isAuthenticated, loading } = useAuth()
   const [mounted, setMounted] = useState(false)
 
@@ -54,6 +51,7 @@ export default function Header() {
 }
 
 export function CartNav() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { cart, loading, refreshCart } = useCartStore()
   const { isAuthenticated } = useAuth()
 

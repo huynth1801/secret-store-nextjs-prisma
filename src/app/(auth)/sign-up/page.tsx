@@ -89,6 +89,10 @@ const SignUpPage = () => {
     }
   }
 
+  if (error) {
+    return <p>Error...</p>
+  }
+
   return (
     <div className="w-full max-w-md">
       <Form {...form}>

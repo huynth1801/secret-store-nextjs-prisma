@@ -6,10 +6,11 @@ import { MinusIcon, PlusIcon, ShoppingBagIcon, X } from "lucide-react"
 import { useAuth } from "@/app/hooks/use-auth"
 import useCartStore from "@/store/useCartStore"
 import { Product } from "@prisma/client"
+import { Color } from "@/store/useCartStore"
 
 type CartButtonProps = {
   product: Product
-  selectedColor: string
+  selectedColor: Color
 }
 
 export default function CartButton({
@@ -21,14 +22,14 @@ export default function CartButton({
 
 type ButtonComponentProps = {
   product: Product
-  selectedColor: string
+  selectedColor: Color
 }
 
 const ButtonComponent = ({ product, selectedColor }: ButtonComponentProps) => {
   const { isAuthenticated } = useAuth()
   const { loading, addToCart, getCountInCart, removeFromCart } = useCartStore()
 
-  const count = getCountInCart(product.id, selectedColor)
+  const count = getCountInCart(product.id, selectedColor.id)
 
   if (loading)
     return (

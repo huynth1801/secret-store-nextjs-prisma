@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ProductGrid, ProductSkeletonGrid } from "@/components/native/Product"
 import { Heading } from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
@@ -42,6 +43,7 @@ export default async function Products({ searchParams }: ProductsProps) {
     take: 12,
     include: {
       categories: true,
+      colors: true,
     },
   })
 

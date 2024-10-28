@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma"
 import { NextResponse } from "next/server"
 import { parse } from "cookie"
-import jwt from "jsonwebtoken"
+import jwt, { JwtPayload } from "jsonwebtoken"
 
 export async function GET(req: Request) {
   try {
@@ -18,8 +18,9 @@ export async function GET(req: Request) {
     const decodedToken = jwt.verify(
       refreshToken,
       process.env.JWT_REFRESH_SECRET!
-    )
-    const userId = decodedToken?.userId
+    ) as JwtPayload
+
+    const userId = decodedToken.userId
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 })
@@ -53,7 +54,6 @@ export async function POST(req: Request) {
     const cookieHeader = req.headers.get("cookie") || ""
     const cookies = parse(cookieHeader)
     const refreshToken = cookies["refreshToken"]
-    console.log("refreshToken", refreshToken)
 
     if (!refreshToken) {
       return new NextResponse("Unauthorized", { status: 401 })
@@ -63,8 +63,9 @@ export async function POST(req: Request) {
     const decodedToken = jwt.verify(
       refreshToken,
       process.env.JWT_REFRESH_SECRET!
-    )
-    const userId = decodedToken?.userId
+    ) as JwtPayload
+
+    const userId = decodedToken.userId
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 })

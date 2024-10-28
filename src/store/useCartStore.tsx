@@ -1,6 +1,7 @@
 import { create } from "zustand"
 import axios from "axios"
 import { persist } from "zustand/middleware"
+// import { Color } from "@prisma/client"
 
 type Product = {
   id: string
@@ -8,20 +9,28 @@ type Product = {
   price: number
   images: string[]
   description: string
-  discount?: number
+  discount: number
 }
 
-type Color = {
+export type Color = {
   id: string
   name: string
   value: string
 }
 
-type CartItem = {
-  productId: string
+// type CartItem = {
+//   productId: string
+//   product: Product
+//   colorId: string // New field to store selected color
+//   color: Color // New field for color details
+//   count: number
+// }
+
+export interface CartItem {
   product: Product
-  colorId: string // New field to store selected color
-  color: Color // New field for color details
+  productId: string
+  color: Color
+  colorId: string
   count: number
 }
 
@@ -148,7 +157,7 @@ const useCartStore = create<CartState>()(
       getCountInCart: (productId: string, colorId: string) => {
         const items = get().cart.items || []
         const item = items.find(
-          (item) => item.productId === productId && item.colorId === colorId
+          (item) => item.productId === productId && item.color?.id === colorId
         )
         return item ? item.count : 0
       },
@@ -162,7 +171,7 @@ const useCartStore = create<CartState>()(
         const { cart } = get()
         const items = [...cart.items]
         const index = items.findIndex(
-          (item) => item.productId === product.id && item.colorId === color.id
+          (item) => item.productId === product.id && item.color.id === color.id
         )
 
         if (index > -1) {

@@ -1,8 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { useRouter } from "next/navigation"
-import { parseCookies, setCookie, destroyCookie } from "nookies"
+import { parseCookies, destroyCookie } from "nookies"
 
 type User = {
   id: string
@@ -14,7 +13,6 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [user, setUser] = useState<User | null>(null)
-  const router = useRouter()
 
   const getRefreshToken = useCallback(() => {
     if (typeof window !== "undefined") {

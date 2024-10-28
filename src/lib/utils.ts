@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function isVariableValid(variable) {
+export function isVariableValid<T>(variable: T) {
   return variable !== null && variable !== undefined
 }
 

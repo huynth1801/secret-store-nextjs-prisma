@@ -9,7 +9,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
-import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
@@ -24,11 +23,11 @@ import {
 } from "@/components/ui/popover"
 import { cn, isVariableValid } from "@/lib/utils"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { Key, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
 import { Category } from "@prisma/client"
 
-export function SortBy({ initialData }) {
+export function SortBy({ initialData }: { initialData: string | undefined }) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
