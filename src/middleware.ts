@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 // Danh sách các route cần bảo vệ
-const protectedRoutes = ["/", "/profile", "/settings"]
+const protectedRoutes = ["/profile", "/settings", "/orders"]
 
 const publicOnlyRoutes = ["/sign-in", "/sign-up"]
 
