@@ -12,6 +12,7 @@ interface ChatContainerProps {
   onClose?: () => void
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function ChatContainer({ onClose }: ChatContainerProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
